@@ -1,5 +1,9 @@
-# Object file
-*.o
-
-# Ada Library Information
-*.ali
+/DuhMEx/Debug
+/DuhMEx/Release
+/DuhMEx/ipch
+/DuhMEx/*.opensdf
+/DuhMEx/*.sdf
+/DuhMEx/*.filters
+/DuhMEx/*.user
+/DuhMEx/*.suo
+/DuhMEx/*.aps
