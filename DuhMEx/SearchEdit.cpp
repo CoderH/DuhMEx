@@ -60,7 +60,7 @@ static void AddMouseHookUser(void *ptr)
 
 /////////////////////////////////////////////////////////////////////////////
 // CSearchEdit
-CSearchEdit::CSearchEdit()
+Duh::CSearchEdit::CSearchEdit()
 : m_pDropDownWnd(NULL)
 , m_pFunGetData(NULL)
 , m_eWndAlign(align_left)
@@ -80,7 +80,7 @@ CSearchEdit::CSearchEdit()
 }
 
 
-CSearchEdit::~CSearchEdit()
+Duh::CSearchEdit::~CSearchEdit()
 {
    delete m_pVecCache;
    m_pVecCache = NULL;
@@ -93,7 +93,7 @@ CSearchEdit::~CSearchEdit()
    }
 }
 
-void CSearchEdit::OnDestroy() 
+void Duh::CSearchEdit::OnDestroy()
 {
    if (m_hThread != NULL) MsgWaitForMultipleObjects(1,&m_hThread,TRUE,700,QS_ALLINPUT);
    if (m_hThread != NULL)  ::TerminateThread(m_hThread,-1);
@@ -132,7 +132,7 @@ void CSearchEdit::OnDestroy()
 }
 
 
-void CSearchEdit::PreSubclassWindow()
+void Duh::CSearchEdit::PreSubclassWindow()
 {
    if (m_pDropDownWnd == NULL)
    {
@@ -179,7 +179,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CSearchEdit message handlers
 
-BOOL CSearchEdit::PreTranslateMessage(MSG* pMsg) 
+BOOL Duh::CSearchEdit::PreTranslateMessage(MSG* pMsg)
 {
    BOOL bDeal = FALSE;
    if(pMsg->message==WM_KEYDOWN)
@@ -246,7 +246,7 @@ BOOL CSearchEdit::PreTranslateMessage(MSG* pMsg)
    }
    return bDeal ? bDeal : CEdit::PreTranslateMessage(pMsg);
 }
-LRESULT CSearchEdit::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT Duh::CSearchEdit::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
    if(message == WM_KILLFOCUS)
    {
@@ -260,7 +260,7 @@ LRESULT CSearchEdit::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 
-void CSearchEdit::ShowDropDownWnd(BOOL bShow /*= TRUE*/)
+void Duh::CSearchEdit::ShowDropDownWnd(BOOL bShow /*= TRUE*/)
 {
    if (bShow)
    {
@@ -319,7 +319,7 @@ void CSearchEdit::ShowDropDownWnd(BOOL bShow /*= TRUE*/)
 }
 
 
-void CSearchEdit::UpdateDropDownPos()
+void Duh::CSearchEdit::UpdateDropDownPos()
 {
    if (m_pDropDownWnd != NULL)
    {
@@ -332,7 +332,7 @@ void CSearchEdit::UpdateDropDownPos()
    }
 }
 
-void CSearchEdit::UpdateDropDownSize()
+void Duh::CSearchEdit::UpdateDropDownSize()
 {
    CRect rect,rectItem;
    if (m_pDropDownWnd != NULL)
@@ -369,7 +369,7 @@ void CSearchEdit::UpdateDropDownSize()
    }
 }
 
-BOOL CSearchEdit::IsDropDown(BOOL bComplete)
+BOOL Duh::CSearchEdit::IsDropDown(BOOL bComplete)
 {
    BOOL bIsDropDown = ((m_pDropDownWnd != NULL) && ::IsWindow(m_pDropDownWnd->m_hWnd) && m_pDropDownWnd->IsWindowVisible());
    if (bComplete)
@@ -385,7 +385,7 @@ BOOL CSearchEdit::IsDropDown(BOOL bComplete)
    return bIsDropDown;
 }
 
-BOOL CSearchEdit::OnChange() 
+BOOL Duh::CSearchEdit::OnChange()
 {
    if (IsWindowVisible() && IsWindowEnabled() && GetModify())
    {  
@@ -393,7 +393,7 @@ BOOL CSearchEdit::OnChange()
    }
    return FALSE;
 }
-void CSearchEdit::OnTimer(UINT nIDEvent) 
+void Duh::CSearchEdit::OnTimer(UINT nIDEvent)
 {
    if (nIDEvent == TIMER_DELAY)
    {
@@ -439,7 +439,7 @@ void CSearchEdit::OnTimer(UINT nIDEvent)
    }  
    CEdit::OnTimer(nIDEvent);
 }
-LRESULT CSearchEdit::OnSearchResult(WPARAM wParam,LPARAM lParam)
+LRESULT Duh::CSearchEdit::OnSearchResult(WPARAM wParam, LPARAM lParam)
 {
    int nItemCount = max(0,(int)wParam);
    ExchangeCacheData();
@@ -455,7 +455,7 @@ LRESULT CSearchEdit::OnSearchResult(WPARAM wParam,LPARAM lParam)
 }
 
 
-int CSearchEdit::CallBackDataFunc()
+int Duh::CSearchEdit::CallBackDataFunc()
 {
    int nItemCount = 0;
    if(m_pFunGetData != NULL)
@@ -469,13 +469,13 @@ int CSearchEdit::CallBackDataFunc()
    return nItemCount;
 }
 
-void CSearchEdit::AsynSearch(BOOL bAsyn)
+void Duh::CSearchEdit::AsynSearch(BOOL bAsyn)
 {
    m_bAsynSearch = bAsyn;
 }
 
 
-LRESULT CALLBACK CSearchEdit::MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Duh::CSearchEdit::MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 {
    MOUSEHOOKSTRUCT *mhh = (MOUSEHOOKSTRUCT *)lParam;
    if (code >= 0)
@@ -514,7 +514,7 @@ LRESULT CALLBACK CSearchEdit::MouseHookProc(int code, WPARAM wParam, LPARAM lPar
    return CallNextHookEx(g_hMouseHook,code,wParam,lParam);
 }
 
-void CSearchEdit::SetDropDownStyle(ALIMENT eAlign /*= align_left*/,PSIZE pSize /*= NULL*/,CFont *pFont /*= NULL*/,BOOL bWidenWithScrollBar /*= FALSE*/)
+void Duh::CSearchEdit::SetDropDownStyle(ALIMENT eAlign /*= align_left*/, PSIZE pSize /*= NULL*/, CFont *pFont /*= NULL*/, BOOL bWidenWithScrollBar /*= FALSE*/)
 {
    if ((m_pDropDownSize == NULL) && (pSize != NULL))
    {
@@ -539,7 +539,7 @@ void CSearchEdit::SetDropDownStyle(ALIMENT eAlign /*= align_left*/,PSIZE pSize /
    m_bWidenWithScrollBar = bWidenWithScrollBar;
 }
 
-void CSearchEdit::OnSize(UINT nType, int cx, int cy)
+void Duh::CSearchEdit::OnSize(UINT nType, int cx, int cy)
 {
    CEdit::OnSize(nType,cx,cy);
    UpdateMargins();
@@ -549,26 +549,26 @@ void CSearchEdit::OnSize(UINT nType, int cx, int cy)
    }
 }
 
-void CSearchEdit::OnMove(int x, int y)
+void Duh::CSearchEdit::OnMove(int x, int y)
 {
     if (m_pDropDownWnd != NULL) UpdateDropDownPos();
 }
 
-void CSearchEdit::OnEndSelDropDownItem(RESULTINFO info)
+void Duh::CSearchEdit::OnEndSelDropDownItem(RESULTINFO info)
 {
  
 }
 
-void CSearchEdit::SetSearchDelay(UINT millisecondsDelay)
+void Duh::CSearchEdit::SetSearchDelay(UINT millisecondsDelay)
 {
    m_nDelay = millisecondsDelay;
 }
-void CSearchEdit::SetDimText(CString strText)
+void Duh::CSearchEdit::SetDimText(CString strText)
 {
    m_strDimText = strText;
 }
 
-void CSearchEdit::SetDimTextFont(LOGFONT *pLogFont)
+void Duh::CSearchEdit::SetDimTextFont(LOGFONT *pLogFont)
 {
    if (pLogFont != NULL) 
    {
@@ -578,7 +578,7 @@ void CSearchEdit::SetDimTextFont(LOGFONT *pLogFont)
    }
 }
 
-void CSearchEdit::OnPaint()
+void Duh::CSearchEdit::OnPaint()
 {
    CEdit::OnPaint();
    CRect rect;
@@ -604,12 +604,12 @@ void CSearchEdit::OnPaint()
    }
 }
 
-void CSearchEdit::OnShowWindow(BOOL bShow, UINT nStatus)
+void Duh::CSearchEdit::OnShowWindow(BOOL bShow, UINT nStatus)
 {
    CEdit::OnShowWindow(bShow,nStatus);
 }
 
-UINT CSearchEdit::UpdateThread(LPVOID pParam)
+UINT Duh::CSearchEdit::UpdateThread(LPVOID pParam)
 {
    CSearchEdit *pEdit = (CSearchEdit *)pParam;
    pEdit->m_nUpdateFlags &= ~UPDATE_FLAG_NEWREQUEST;
@@ -627,13 +627,13 @@ UINT CSearchEdit::UpdateThread(LPVOID pParam)
    return 1;
 }
 
-void CSearchEdit::SetSearchFunc(pFunGetDataFunctor pFun,LPARAM lParam)
+void Duh::CSearchEdit::SetSearchFunc(pFunGetDataFunctor pFun, LPARAM lParam)
 {
    m_pFunGetData = pFun;
    m_lGetDataFuncParam = lParam;
 }
 
-void CSearchEdit::ExchangeCacheData()
+void Duh::CSearchEdit::ExchangeCacheData()
 {
    vector<RESULTINFO> *pTemp;
    pTemp = m_pVecData;
@@ -641,7 +641,7 @@ void CSearchEdit::ExchangeCacheData()
    m_pVecCache = pTemp;
 }
 
-void CSearchEdit::UpdateMargins()
+void Duh::CSearchEdit::UpdateMargins()
 {
    CRect rect,rcItem;
    DWORD dwMargins;
@@ -674,12 +674,12 @@ void CSearchEdit::UpdateMargins()
 }
 
 
-void CSearchEdit::UpdateRightCtrl(UINT &nRightMargin)
+void Duh::CSearchEdit::UpdateRightCtrl(UINT &nRightMargin)
 {
 
 }
 
-BOOL CSearchEdit::OnEraseBkgnd(CDC* pDC)
+BOOL Duh::CSearchEdit::OnEraseBkgnd(CDC* pDC)
 {
    if ((GetStyle()&WS_CLIPCHILDREN) != 0)
    {

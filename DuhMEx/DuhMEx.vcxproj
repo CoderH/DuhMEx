@@ -124,6 +124,7 @@ xcopy $(OutDir)$(ProjectName)_x86.lib ..\bin\ /y </Command>
     </ClCompile>
     <ClCompile Include="DuhMenu.cpp" />
     <ClCompile Include="DuhMEx.cpp" />
+    <ClCompile Include="DuhStatic.cpp" />
     <ClCompile Include="PictureEx.cpp" />
     <ClCompile Include="SearchEdit.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -138,6 +139,7 @@ xcopy $(OutDir)$(ProjectName)_x86.lib ..\bin\ /y </Command>
   <ItemGroup>
     <ClInclude Include="DetailWnd.h" />
     <ClInclude Include="DuhMenu.h" />
+    <ClInclude Include="DuhStatic.h" />
     <ClInclude Include="PictureEx.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SearchEdit.h" />
