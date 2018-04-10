@@ -72,9 +72,14 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>@echo 自定义拷贝
+      <Command>@echo 拷贝二进制文件
 xcopy $(OutDir)$(ProjectName)_x86D.dll ..\bin\ /y 
-xcopy $(OutDir)$(ProjectName)_x86D.lib ..\bin\ /y </Command>
+xcopy $(OutDir)$(ProjectName)_x86D.lib ..\bin\ /y 
+@echo 拷贝头文件
+xcopy $(ProjectDir)DetailWnd.h ..\include\ /y 
+xcopy $(ProjectDir)DuhMenu.h ..\include\ /y 
+xcopy $(ProjectDir)DuhStatic.h ..\include\ /y 
+xcopy $(ProjectDir)SearchEdit.h ..\include\ /y </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -104,9 +109,14 @@ xcopy $(OutDir)$(ProjectName)_x86D.lib ..\bin\ /y </Command>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>@echo 自定义拷贝
+      <Command>@echo 拷贝二进制文件
 xcopy $(OutDir)$(ProjectName)_x86.dll ..\bin\ /y 
-xcopy $(OutDir)$(ProjectName)_x86.lib ..\bin\ /y </Command>
+xcopy $(OutDir)$(ProjectName)_x86.lib ..\bin\ /y 
+@echo 拷贝头文件
+xcopy $(ProjectDir)DetailWnd.h ..\include\ /y 
+xcopy $(ProjectDir)DuhMenu.h ..\include\ /y 
+xcopy $(ProjectDir)DuhStatic.h ..\include\ /y 
+xcopy $(ProjectDir)SearchEdit.h ..\include\ /y </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

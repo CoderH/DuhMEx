@@ -13,10 +13,10 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-#define CS_CLOSEBTN                    0x00000001    //关闭按钮
-#define CS_POSITIIONTAG                0x00000002    //位置标记
-#define CS_ANTIA_ALIAS_BORDER          0x00000004    //边框抗锯齿
-#define CS_AUTO_CLEAN_RESOURCE         0x00000008    //隐藏时清理资源
+#define MASK_MODIFY_WNDSTYLE           0x0000FFFF    //m_dwStyle提供修部分改掩码
+#define WS_ANTIA_ALIAS_BORDER          0x00010000    //边框抗锯齿
+
+#define FS_HOVER_CLOSE_BTN             0x00000001    //鼠标悬停在closeBtn区域
 
 #define HEIGHT_TAG              10
 #define WIDTH_TAG               22
@@ -88,17 +88,16 @@ static void AddHookUser(void *pUser,HHOOK hHook)
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-Duh::CDetailWnd::CDetailWnd(BOOL bAutoCleanResource /*= FALSE*/)
+Duh::CDetailWnd::CDetailWnd()
 {
+   m_dwFlags = 0;
    m_pUserPtr = NULL;
-   //m_pBtnClose = NULL;
    m_nMaxWidth = 1000;
    SetBkColor(RGB(255, 255, 255));
    SetTitleColor(RGB(0,0,0));
    SetContentColor(RGB(20, 20, 20));
    SetBorderColor(RGB(183,183,183));
-   m_dwStyle = (CS_CLOSEBTN|CS_POSITIIONTAG|CS_ANTIA_ALIAS_BORDER);
-   if (bAutoCleanResource) m_dwStyle|= CS_AUTO_CLEAN_RESOURCE;
+   m_dwStyle = (WS_CLOSEBTN|WS_POSITIIONTAG|WS_ANTIA_ALIAS_BORDER);
    LoadDefaultFont();
 }
 
@@ -107,27 +106,30 @@ Duh::CDetailWnd::~CDetailWnd()
    
 }
 
-BEGIN_MESSAGE_MAP(CDetailWnd,CWnd)
-   ON_WM_ERASEBKGND()
-   ON_WM_PAINT()
-   ON_BN_CLICKED(CIDC_BUTTON_CLOSE,OnClickCloseBtn)
+BEGIN_MESSAGE_MAP(CDetailWnd, CWnd)
+    ON_WM_ERASEBKGND()
+    ON_WM_PAINT()
+    ON_WM_MOUSEMOVE()
+    ON_WM_LBUTTONUP()
+    ON_BN_CLICKED(CIDC_BUTTON_CLOSE, OnClickCloseBtn)
 END_MESSAGE_MAP()
 
 BOOL Duh::CDetailWnd::Create(CWnd *pParent)
 {
     pParent = GetSafeOwner(pParent);
    BOOL bRes = CreateEx(0,AfxRegisterWndClass(0),"",WS_POPUP,CRect(0,0,0,0),pParent,0,NULL);
-   /*if (bRes)
-   {
-      m_pBtnClose = new CMultiTypeOwnerDrawBtn;
-      m_pBtnClose->Create("",0,CRect(0,0,0,0),this,CIDC_BUTTON_CLOSE);
-      m_pBtnClose->SetTemplate(CMultiTypeOwnerDrawBtn::Template_Close);
-      m_pBtnClose->SetNormalClr(RGB(0,0,0),m_clrBk);
-      m_pBtnClose->SetHighlightClr(RGB(255,255,255),RGB(232, 17, 35));
-      m_pBtnClose->SetNoActive(FALSE);
-      m_pBtnClose->ShowWindow(SW_SHOW);
-   }*/
    return bRes;
+}
+
+void Duh::CDetailWnd::ModifyWndStyle(DWORD dwAdd, DWORD dwRemove)
+{
+    DWORD dwVisualStyle = WS_CLOSEBTN | WS_POSITIIONTAG;
+    DWORD dwStyle = m_dwStyle;
+    dwAdd &= MASK_MODIFY_WNDSTYLE;
+    dwRemove &= MASK_MODIFY_WNDSTYLE;
+    m_dwStyle |= dwAdd;
+    m_dwStyle &= ~dwRemove;
+    if ((dwStyle&dwVisualStyle) != (m_dwStyle&dwVisualStyle)) Invalidate();
 }
 
 LRESULT CALLBACK Duh::CDetailWnd::KeyboardHookProc(int code, WPARAM wParam, LPARAM lParam)
@@ -192,12 +194,6 @@ LRESULT CALLBACK Duh::CDetailWnd::CallWndRetProc(int code, WPARAM wParam, LPARAM
 void Duh::CDetailWnd::PostNcDestroy()
 {
    CWnd::PostNcDestroy();
-  /* if (m_pBtnClose != NULL)
-   {
-      m_pBtnClose->DestroyWindow();
-      delete m_pBtnClose;
-      m_pBtnClose = NULL;
-   }*/
    RemoveHookUser(this,m_hMouseHook);
    RemoveHookUser(this,m_hKeyboardHook);
    RemoveHookUser(this,m_hCallWndRetHook);
@@ -216,7 +212,7 @@ void Duh::CDetailWnd::PostNcDestroy()
       ::UnhookWindowsHookEx(m_hCallWndRetHook);
       m_hCallWndRetHook = NULL;
    }
-   if ((m_dwStyle&CS_AUTO_CLEAN_RESOURCE) != 0)
+   if ((m_dwStyle&WS_AUTO_CLEAN_RESOURCE) != 0)
    {
       if (m_pUserPtr != NULL) *m_pUserPtr = NULL;
       delete this;
@@ -255,8 +251,9 @@ void Duh::CDetailWnd::Popup(CString strTitle, CString strContent, CPoint ptPosit
 
 void Duh::CDetailWnd::Popup(CWnd *pParent, CString strTitle, CString strContent, CRect position, ExAttribute *pExAttribute /*= NULL*/)
 {
-   CDetailWnd *pWnd = new CDetailWnd(TRUE);
+   CDetailWnd *pWnd = new CDetailWnd();
    pWnd->Create(pParent);
+   pWnd->ModifyWndStyle(WS_AUTO_CLEAN_RESOURCE,0);
    if (pExAttribute != NULL)
    {
       if (pExAttribute->nMaxWidth > 0) pWnd->SetMaxWidth(pExAttribute->nMaxWidth);
@@ -266,8 +263,7 @@ void Duh::CDetailWnd::Popup(CWnd *pParent, CString strTitle, CString strContent,
       if (pExAttribute->clrContent != CLR_NONE) pWnd->SetContentColor(pExAttribute->clrContent);
       if (pExAttribute->pLfTitle != NULL) pWnd->SetTitleFont(pExAttribute->pLfTitle);
       if (pExAttribute->pLfContent != NULL) pWnd->setContentFont(pExAttribute->pLfContent);
-      pWnd->HideCloseBtn(pExAttribute->bHideCloseBtn);
-      pWnd->HidePositionTag(pExAttribute->bHidePositionTag);
+      pWnd->m_dwStyle = pExAttribute->dwWndStyle;
    }
    pWnd->Popup(strTitle,strContent,position);
 }
@@ -284,14 +280,43 @@ void Duh::CDetailWnd::Popup(CWnd *pParent, CString strTitle, CString strContent,
 
 BOOL Duh::CDetailWnd::OnEraseBkgnd(CDC* pDC)
 {
-   if ((m_dwStyle&CS_ANTIA_ALIAS_BORDER) == 0)
-   {
-      CRect rect;
-      GetClientRect(&rect);
-      CBrush brush;
-      brush.CreateSolidBrush(m_clrBk);
-      pDC->FillRect(rect,&brush);
-   }
+    if ((m_dwStyle&WS_ANTIA_ALIAS_BORDER) == 0)
+    {
+        CRect rect;
+        GetClientRect(&rect);
+        CBrush brush;
+        brush.CreateSolidBrush(m_clrBk);
+        pDC->FillRect(rect, &brush);
+        CBrush br;
+        br.CreateSolidBrush(m_clrBorder);
+        pDC->FrameRgn(&m_rectInfo.rgnWindow, &br, WIDTH_BORDER, WIDTH_BORDER);
+    }
+    else
+    {
+        Graphics graphics(pDC->m_hDC);
+        graphics.SetSmoothingMode(SmoothingModeAntiAlias);
+        Color penColor;
+        penColor.SetFromCOLORREF(m_clrBorder);
+        Pen pen(penColor, WIDTH_BORDER);
+
+        int nCount = m_rectInfo.vecRgnPoint.size();
+        Point *point = new Point[nCount];
+        int nIndex = 0;
+        std::vector<CPoint>::iterator iter = m_rectInfo.vecRgnPoint.begin();
+        for (iter = m_rectInfo.vecRgnPoint.begin(); (iter != (m_rectInfo.vecRgnPoint.end()) && (nIndex < nCount)); iter++)
+        {
+           point[nIndex] =  Point(iter->x,iter->y);
+           nIndex++;
+        }
+
+        Color BrushColor;
+        BrushColor.SetFromCOLORREF(m_clrBk);
+        SolidBrush brush(BrushColor);
+        graphics.FillPolygon(&brush, point, nIndex);
+        graphics.DrawPolygon(&pen, point, nIndex);
+        delete point;
+        point = NULL;
+    }
    return TRUE;
 }
 
@@ -299,67 +324,10 @@ void Duh::CDetailWnd::OnPaint()
 {
    CPaintDC dc(this);
    dc.SetBkMode(TRANSPARENT);
-   if ((m_dwStyle&CS_ANTIA_ALIAS_BORDER) != 0)
-   {
-      Graphics graphics(dc.m_hDC);
-      graphics.SetSmoothingMode(SmoothingModeAntiAlias);
-      Color penColor;
-      penColor.SetFromCOLORREF(m_clrBorder);
-      Pen pen(penColor,WIDTH_BORDER);
-
-      int nCount = m_rectInfo.vecRgnPoint.size();
-      Point *point= new Point[nCount];
-      int nIndex = 0;
-      std::vector<Gdiplus::Point>::iterator iter = m_rectInfo.vecRgnPoint.begin();
-      for(iter=m_rectInfo.vecRgnPoint.begin();(iter != (m_rectInfo.vecRgnPoint.end()) && (nIndex < nCount));iter++)
-      {
-         point[nIndex] = *iter;
-         nIndex ++;
-      }
-      
-      Color BrushColor;
-      BrushColor.SetFromCOLORREF(m_clrBk);
-      SolidBrush brush(BrushColor);
-      graphics.FillPolygon(&brush,point,nIndex);
-      graphics.DrawPolygon(&pen,point,nIndex);
-      delete point;
-      point = NULL;
-   }
-   else
-   {
-      CBrush br;
-      br.CreateSolidBrush(m_clrBorder);
-      dc.FrameRgn(&m_rectInfo.rgnWindow,&br,WIDTH_BORDER,WIDTH_BORDER);
-   }
-
-   if (!m_strTitle.IsEmpty())
-   {
-      CFont *pOldFont = dc.SelectObject(&m_ftTitle);
-      dc.SetTextColor(m_clrTitle);
-      dc.DrawText(m_strTitle,&m_rectInfo.drawTitle,DT_LEFT|DT_NOPREFIX|DT_EXPANDTABS|DT_SINGLELINE);
-      dc.SelectObject(pOldFont);
-   }
-   if (!m_strContent.IsEmpty())
-   {
-      CFont *pOldFont = dc.SelectObject(&m_ftContent);
-      dc.SetTextColor(m_clrContent);
-      dc.DrawText(m_strContent,&m_rectInfo.drawContent,DT_LEFT|DT_NOPREFIX|DT_EXPANDTABS|DT_WORDBREAK|DT_EDITCONTROL);
-      dc.SelectObject(pOldFont);
-   }
+   if ((m_dwStyle&WS_CLOSEBTN) != 0) DrawCloseBtn(&dc);
+   DrawTitle(&dc);
+   DrawContent(&dc);
 }
-
-void Duh::CDetailWnd::HideCloseBtn(BOOL bHide)
-{
-   if (bHide) m_dwStyle &= ~CS_CLOSEBTN;
-   else m_dwStyle |= CS_CLOSEBTN;
-}
-
-void Duh::CDetailWnd::HidePositionTag(BOOL bHide)
-{
-   if (bHide) m_dwStyle &= ~CS_POSITIIONTAG;
-   else m_dwStyle |= CS_POSITIIONTAG;
-}
-
 
 void Duh::CDetailWnd::InitAllRect(RECTINFO &rectInfo)
 {
@@ -383,7 +351,7 @@ void Duh::CDetailWnd::InitAllRect(RECTINFO &rectInfo)
       rectInfo.drawTitle.bottom = rectInfo.drawTitle.top + dc.GetTextExtent(m_strTitle).cy;
       dc.SelectObject(&pOldFont);
    }
-   if ((m_dwStyle&CS_CLOSEBTN) != 0)
+   if ((m_dwStyle&WS_CLOSEBTN) != 0)
    {
       rectInfo.closeBtn.left = rectInfo.drawTitle.right + MARGIN_TEXT;
       rectInfo.closeBtn.right = rectInfo.closeBtn.left + WIDTH_CLOSEBTN;
@@ -433,14 +401,14 @@ void Duh::CDetailWnd::InitAllRect(RECTINFO &rectInfo)
    }
   
    //windows宽度调整,重新右对齐closBtn
-   if ((m_dwStyle&CS_CLOSEBTN) != 0)
+   if ((m_dwStyle&WS_CLOSEBTN) != 0)
    {
       int nOffsetX = rectInfo.client.right -MARGIN_CLOSEBTN_RIGHT - rectInfo.closeBtn.right;
       if (nOffsetX > 0) OffsetRect(rectInfo.closeBtn,nOffsetX,0);
    }
    rectInfo.window = rectInfo.client;
 
-   if ((m_dwStyle&CS_POSITIIONTAG) != 0)
+   if ((m_dwStyle&WS_POSITIIONTAG) != 0)
    {  
       //默认显示目标上方
        rectInfo.window.bottom += HEIGHT_TAG;
@@ -471,7 +439,7 @@ void Duh::CDetailWnd::OffSetAllRect(RECTINFO &rectInfo, CPoint wndPosition, CPoi
    rectInfo.window.OffsetRect(wndPosition);
    
    rectInfo.vecRgnPoint.clear();
-   if ((m_dwStyle&CS_POSITIIONTAG) != 0) 
+   if ((m_dwStyle&WS_POSITIIONTAG) != 0) 
    {
       CRgn rgnTag,rgnClient;
       CPoint arPoint[3];
@@ -493,17 +461,17 @@ void Duh::CDetailWnd::OffSetAllRect(RECTINFO &rectInfo, CPoint wndPosition, CPoi
          arPoint[2].x = TagPosition.x + WIDTH_TAG/2;
          arPoint[2].y = rectInfo.client.top;
          
-         if ((m_dwStyle&CS_ANTIA_ALIAS_BORDER) != 0)
+         if ((m_dwStyle&WS_ANTIA_ALIAS_BORDER) != 0)
          {
             int nRBMargin = max(WIDTH_BORDER/2,1);
             int nLTMargin = WIDTH_BORDER/2;
-            rectInfo.vecRgnPoint.push_back(Point(m_rectInfo.client.right-nRBMargin,m_rectInfo.client.top+nLTMargin));
-            rectInfo.vecRgnPoint.push_back(Point(m_rectInfo.client.right-nRBMargin,m_rectInfo.client.bottom-nRBMargin));
-            rectInfo.vecRgnPoint.push_back(Point(m_rectInfo.client.left+nLTMargin,m_rectInfo.client.bottom-nRBMargin));
-            rectInfo.vecRgnPoint.push_back(Point(m_rectInfo.client.left+nLTMargin,m_rectInfo.client.top+nLTMargin));
-            rectInfo.vecRgnPoint.push_back(Point(arPoint[0].x+1+nRBMargin,arPoint[0].y+nLTMargin));
-            rectInfo.vecRgnPoint.push_back(Point(arPoint[1].x,arPoint[1].y+1));
-            rectInfo.vecRgnPoint.push_back(Point(arPoint[2].x-1-nRBMargin,arPoint[2].y+nLTMargin));
+            rectInfo.vecRgnPoint.push_back(CPoint(m_rectInfo.client.right-nRBMargin,m_rectInfo.client.top+nLTMargin));
+            rectInfo.vecRgnPoint.push_back(CPoint(m_rectInfo.client.right-nRBMargin,m_rectInfo.client.bottom-nRBMargin));
+            rectInfo.vecRgnPoint.push_back(CPoint(m_rectInfo.client.left+nLTMargin,m_rectInfo.client.bottom-nRBMargin));
+            rectInfo.vecRgnPoint.push_back(CPoint(m_rectInfo.client.left+nLTMargin,m_rectInfo.client.top+nLTMargin));
+            rectInfo.vecRgnPoint.push_back(CPoint(arPoint[0].x+1+nRBMargin,arPoint[0].y+nLTMargin));
+            rectInfo.vecRgnPoint.push_back(CPoint(arPoint[1].x,arPoint[1].y+1));
+            rectInfo.vecRgnPoint.push_back(CPoint(arPoint[2].x-1-nRBMargin,arPoint[2].y+nLTMargin));
          } 
       }
       else
@@ -516,17 +484,17 @@ void Duh::CDetailWnd::OffSetAllRect(RECTINFO &rectInfo, CPoint wndPosition, CPoi
          arPoint[2].y = rectInfo.client.Height();
          
          
-         if ((m_dwStyle&CS_ANTIA_ALIAS_BORDER) != 0)
+         if ((m_dwStyle&WS_ANTIA_ALIAS_BORDER) != 0)
          {
             int nRBMargin = max(WIDTH_BORDER/2,1);
             int nLTMargin = WIDTH_BORDER/2;
-            rectInfo.vecRgnPoint.push_back(Point(m_rectInfo.client.left+nLTMargin,m_rectInfo.client.bottom-nRBMargin));
-            rectInfo.vecRgnPoint.push_back(Point(m_rectInfo.client.left+nLTMargin,m_rectInfo.client.top+nLTMargin));
-            rectInfo.vecRgnPoint.push_back(Point(m_rectInfo.client.right-nRBMargin,m_rectInfo.client.top+nLTMargin));
-            rectInfo.vecRgnPoint.push_back(Point(m_rectInfo.client.right-nRBMargin,m_rectInfo.client.bottom-nRBMargin));
-            rectInfo.vecRgnPoint.push_back(Point(arPoint[2].x-1-nRBMargin,arPoint[2].y-nRBMargin));
-            rectInfo.vecRgnPoint.push_back(Point(arPoint[1].x,arPoint[1].y-1));
-            rectInfo.vecRgnPoint.push_back(Point(arPoint[0].x+1+nRBMargin,arPoint[0].y-nRBMargin));
+            rectInfo.vecRgnPoint.push_back(CPoint(m_rectInfo.client.left+nLTMargin,m_rectInfo.client.bottom-nRBMargin));
+            rectInfo.vecRgnPoint.push_back(CPoint(m_rectInfo.client.left+nLTMargin,m_rectInfo.client.top+nLTMargin));
+            rectInfo.vecRgnPoint.push_back(CPoint(m_rectInfo.client.right-nRBMargin,m_rectInfo.client.top+nLTMargin));
+            rectInfo.vecRgnPoint.push_back(CPoint(m_rectInfo.client.right-nRBMargin,m_rectInfo.client.bottom-nRBMargin));
+            rectInfo.vecRgnPoint.push_back(CPoint(arPoint[2].x-1-nRBMargin,arPoint[2].y-nRBMargin));
+            rectInfo.vecRgnPoint.push_back(CPoint(arPoint[1].x,arPoint[1].y-1));
+            rectInfo.vecRgnPoint.push_back(CPoint(arPoint[0].x+1+nRBMargin,arPoint[0].y-nRBMargin));
          } 
       }
       rgnTag.CreatePolygonRgn(&arPoint[0], 3, ALTERNATE);
@@ -538,14 +506,14 @@ void Duh::CDetailWnd::OffSetAllRect(RECTINFO &rectInfo, CPoint wndPosition, CPoi
    }
    else
    {
-      if ((m_dwStyle&CS_ANTIA_ALIAS_BORDER) != 0)
+      if ((m_dwStyle&WS_ANTIA_ALIAS_BORDER) != 0)
       {
          int nRBMargin = max(WIDTH_BORDER/2,1);
          int nLTMargin = WIDTH_BORDER/2;
-         rectInfo.vecRgnPoint.push_back(Point(m_rectInfo.client.left+nLTMargin,m_rectInfo.client.bottom-nRBMargin));
-         rectInfo.vecRgnPoint.push_back(Point(m_rectInfo.client.left+nLTMargin,m_rectInfo.client.top+nLTMargin));
-         rectInfo.vecRgnPoint.push_back(Point(m_rectInfo.client.right-nRBMargin,m_rectInfo.client.top+nLTMargin));
-         rectInfo.vecRgnPoint.push_back(Point(m_rectInfo.client.right-nRBMargin,m_rectInfo.client.bottom-nRBMargin));
+         rectInfo.vecRgnPoint.push_back(CPoint(m_rectInfo.client.left+nLTMargin,m_rectInfo.client.bottom-nRBMargin));
+         rectInfo.vecRgnPoint.push_back(CPoint(m_rectInfo.client.left+nLTMargin,m_rectInfo.client.top+nLTMargin));
+         rectInfo.vecRgnPoint.push_back(CPoint(m_rectInfo.client.right-nRBMargin,m_rectInfo.client.top+nLTMargin));
+         rectInfo.vecRgnPoint.push_back(CPoint(m_rectInfo.client.right-nRBMargin,m_rectInfo.client.bottom-nRBMargin));
       }
    }
 }
@@ -596,12 +564,7 @@ void Duh::CDetailWnd::PositionWindow(CRect rcPosition)
 
    //调整所有rect信息
    OffSetAllRect(m_rectInfo,rcWin.TopLeft(),tagPosition);
-   
-  /* if (((m_dwStyle&CS_CLOSEBTN)!= 0) && (m_pBtnClose != NULL))
-   {
-      m_pBtnClose->MoveWindow(m_rectInfo.closeBtn);
-   }*/
-
+  
    MoveWindow(m_rectInfo.window);
 
    CRgn rgnWindow;
@@ -613,10 +576,6 @@ void Duh::CDetailWnd::PositionWindow(CRect rcPosition)
 void Duh::CDetailWnd::SetBkColor(COLORREF clrBk)
 {
    m_clrBk = clrBk;
-   /*if ((m_dwStyle&CS_CLOSEBTN) && (m_pBtnClose != NULL))
-   {
-      m_pBtnClose->SetNormalClr(RGB(0,0,0),m_clrBk);
-   }*/
 }
 
 void Duh::CDetailWnd::SetTitleColor(COLORREF clrTitle)
@@ -671,8 +630,62 @@ void Duh::CDetailWnd::setContentFont(PLOGFONT pLogFont)
 
 void Duh::CDetailWnd::Hide()
 {
-   if ((m_dwStyle&CS_AUTO_CLEAN_RESOURCE) != 0) PostMessage(WM_CLOSE);
+   if ((m_dwStyle&WS_AUTO_CLEAN_RESOURCE) != 0) PostMessage(WM_CLOSE);
    else ShowWindow(SW_HIDE);
+}
+
+
+void Duh::CDetailWnd::DrawCloseBtn(CDC *pDC)
+{
+    if (pDC != NULL)
+    {
+        Graphics graphics(pDC->m_hDC);
+        graphics.SetSmoothingMode(SmoothingModeAntiAlias);
+        CRect rect = m_rectInfo.closeBtn;
+        CPoint point;
+        GetCursorPos(&point);
+        ScreenToClient(&point);
+        COLORREF clrBgColor = rect.PtInRect(point) ? RGB(232, 17, 35) : m_clrBk;
+        COLORREF clrBodyColor = rect.PtInRect(point) ? RGB(255, 255, 255) : RGB(0, 0, 0);
+        CBrush brush;
+        brush.CreateSolidBrush(clrBgColor);
+        pDC->FillRect(rect, &brush);
+        Color penColor;
+        penColor.SetFromCOLORREF(clrBodyColor);
+        int nPenWidth;
+        int nSideLength = min(rect.Width(), rect.Height());
+        nPenWidth = 2;
+        int nTLPenSpace = nPenWidth / 2;
+        int nRBPenSpace = max(nPenWidth / 2, 1);
+        int nHorSpace = (rect.Width() - nSideLength) / 2 + max(nSideLength / 4, 1);
+        int nVerSpace = (rect.Height() - nSideLength) / 2 + max(nSideLength / 4, 1);
+        Pen pen(penColor, (Gdiplus::REAL)nPenWidth);
+        pen.SetLineCap(LineCapRound, LineCapRound, DashCapRound);
+        graphics.DrawLine(&pen, rect.left + nHorSpace + nTLPenSpace, rect.top + nVerSpace + nTLPenSpace, rect.right - nHorSpace - nRBPenSpace, rect.bottom - nVerSpace - nRBPenSpace);
+        graphics.DrawLine(&pen, rect.right - nHorSpace - nRBPenSpace, rect.top + nVerSpace + nTLPenSpace, rect.left + nHorSpace + nTLPenSpace, rect.bottom - nVerSpace - nRBPenSpace);
+    }
+}
+
+void Duh::CDetailWnd::DrawTitle(CDC *pDC)
+{
+    if (!m_strTitle.IsEmpty() && (pDC != NULL))
+    {
+        CFont *pOldFont = pDC->SelectObject(&m_ftTitle);
+        pDC->SetTextColor(m_clrTitle);
+        pDC->DrawText(m_strTitle, &m_rectInfo.drawTitle, DT_LEFT | DT_NOPREFIX | DT_EXPANDTABS | DT_SINGLELINE);
+        pDC->SelectObject(pOldFont);
+    }
+}
+
+void Duh::CDetailWnd::DrawContent(CDC *pDC)
+{
+    if (!m_strContent.IsEmpty() && (pDC != NULL))
+    {
+        CFont *pOldFont = pDC->SelectObject(&m_ftContent);
+        pDC->SetTextColor(m_clrContent);
+        pDC->DrawText(m_strContent, &m_rectInfo.drawContent, DT_LEFT | DT_NOPREFIX | DT_EXPANDTABS | DT_WORDBREAK | DT_EDITCONTROL);
+        pDC->SelectObject(pOldFont);
+    }
 }
 
 void Duh::CDetailWnd::SetUserPointer(CDetailWnd **pUserPtr)
@@ -683,6 +696,30 @@ void Duh::CDetailWnd::SetUserPointer(CDetailWnd **pUserPtr)
 void Duh::CDetailWnd::OnClickCloseBtn()
 {
    Hide();
+}
+
+void Duh::CDetailWnd::OnMouseMove(UINT nFlags, CPoint point)
+{
+    if (m_rectInfo.closeBtn.PtInRect(point) && ((m_dwFlags&FS_HOVER_CLOSE_BTN) == 0))
+    {
+        m_dwFlags |= FS_HOVER_CLOSE_BTN;
+        InvalidateRect(m_rectInfo.closeBtn, FALSE);
+    }
+    else if (!m_rectInfo.closeBtn.PtInRect(point) && ((m_dwFlags&FS_HOVER_CLOSE_BTN) != 0))
+    {
+        m_dwFlags &= ~FS_HOVER_CLOSE_BTN;
+        InvalidateRect(m_rectInfo.closeBtn, FALSE);
+    }
+    CWnd::OnMouseMove(nFlags, point);
+}
+
+void Duh::CDetailWnd::OnLButtonUp(UINT nFlags, CPoint point)
+{
+    if (m_rectInfo.closeBtn.PtInRect(point))
+    {
+        Hide();
+    }
+    CWnd::OnLButtonUp(nFlags, point);
 }
 
 LRESULT Duh::CDetailWnd::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
