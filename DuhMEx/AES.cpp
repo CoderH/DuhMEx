@@ -176,7 +176,7 @@ std::string Duh::CAES::Encode_Base64(unsigned char *input,int nLength)
    int nOutLen = Base64::EncodedLength(nLength)+1; //额外增加一个字节保存'\0'
    char *out = new char[nOutLen];
    memset(out,0,nOutLen);
-   Base64::Encode((char *)input,nLength,out,nOutLen);
+   Base64::Encode((char *)input,nLength,out,nOutLen-1);
    string strResult = out;
    delete[] out;
    return strResult;
