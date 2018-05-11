@@ -1,6 +1,7 @@
-; DuhMEx.def : 声明 DLL 的模块参数。
+; DuhMEx.def : Declares the module parameters for the DLL.
 
-LIBRARY
+LIBRARY      "DuhMEx"
+DESCRIPTION  'DuhMEx Windows Dynamic Link Library'
 
 EXPORTS
-    ; 此处可以是显式导出
+    ; Explicit exports can go here

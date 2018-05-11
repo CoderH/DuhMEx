@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "DuhMenu.h"
+#include <algorithm>
 using namespace Gdiplus;
 using namespace std;
 
@@ -187,11 +188,11 @@ BOOL Duh::CDuhMenu::CreatePopupMenu()
     {
         MENUINFO cmi;
         memset(&cmi, 0, sizeof(cmi));
-        GetMenuInfo(&cmi);
+        ::GetMenuInfo(m_hMenu,&cmi);
         if (cmi.cbSize == 0) cmi.cbSize = sizeof(cmi);
         cmi.fMask |= MIM_BACKGROUND;
         cmi.hbrBack = CreateSolidBrush(m_clrBackground);
-        SetMenuInfo(&cmi);
+        ::SetMenuInfo(m_hMenu,&cmi);
     }
     return bSuccess;
 }
@@ -230,11 +231,11 @@ void Duh::CDuhMenu::SetBackgroundColor(COLORREF color)
 
     MENUINFO cmi;
     memset(&cmi, 0, sizeof(cmi));
-    GetMenuInfo(&cmi);
+    ::GetMenuInfo(m_hMenu,&cmi);
     if (cmi.cbSize == 0) cmi.cbSize = sizeof(cmi);
     cmi.fMask |= MIM_BACKGROUND;
     cmi.hbrBack = CreateSolidBrush(m_clrBackground);
-    SetMenuInfo(&cmi);
+    ::SetMenuInfo(m_hMenu,&cmi);
 }
 
 void Duh::CDuhMenu::SetLeftColor(COLORREF color)

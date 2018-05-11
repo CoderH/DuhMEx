@@ -1,42 +1,63 @@
-﻿========================================================================
-    MICROSOFT 基础类库 : DuhMEx 项目概述
+========================================================================
+       MICROSOFT FOUNDATION CLASS LIBRARY : DuhMEx
 ========================================================================
 
 
-应用程序向导已为您创建了此 DuhMEx DLL。此 DLL 不仅演示 Microsoft 基础类的基本使用方法，还可作为您编写 DLL 的起点。
+AppWizard has created this DuhMEx DLL for you.  This DLL not only
+demonstrates the basics of using the Microsoft Foundation classes but
+is also a starting point for writing your DLL.
 
-本文件概要介绍组成 DuhMEx DLL 的每个文件的内容。
+This file contains a summary of what you will find in each of the files that
+make up your DuhMEx DLL.
 
-DuhMEx.vcxproj
-    这是使用应用程序向导生成的 VC++ 项目的主项目文件，其中包含生成该文件的 Visual C++ 的版本信息，以及有关使用应用程序向导选择的平台、配置和项目功能的信息。
-
-DuhMEx.vcxproj.filters
-    这是使用“应用程序向导”生成的 VC++ 项目筛选器文件。它包含有关项目文件与筛选器之间的关联信息。在 IDE 中，通过这种关联，在特定节点下以分组形式显示具有相似扩展名的文件。例如，“.cpp”文件与“源文件”筛选器关联。
+DuhMEx.dsp
+    This file (the project file) contains information at the project level and
+    is used to build a single project or subproject. Other users can share the
+    project (.dsp) file, but they should export the makefiles locally.
 
 DuhMEx.cpp
-    这是包含 DllMain() 定义的主 DLL 源文件。
+    This is the main DLL source file that contains the definition of
+	DllMain().
+
 
 DuhMEx.rc
-    这是程序使用的所有 Microsoft Windows 资源的列表。它包括 RES 子目录中存储的图标、位图和光标。此文件可以直接在 Microsoft Visual C++ 中进行编辑。
+    This is a listing of all of the Microsoft Windows resources that the
+    program uses.  It includes the icons, bitmaps, and cursors that are stored
+    in the RES subdirectory.  This file can be directly edited in Microsoft
+	Visual C++.
+
+DuhMEx.clw
+    This file contains information used by ClassWizard to edit existing
+    classes or add new classes.  ClassWizard also uses this file to store
+    information needed to create and edit message maps and dialog data
+    maps and to create prototype member functions.
 
 res\DuhMEx.rc2
-    此文件包含不在 Microsoft Visual C++ 中进行编辑的资源。您应该将不可由资源编辑器编辑的所有资源放在此文件中。
+    This file contains resources that are not edited by Microsoft 
+	Visual C++.  You should place all resources not editable by
+	the resource editor in this file.
 
 DuhMEx.def
-    此文件包含在 Microsoft Windows 中运行所必需的 DLL 的有关信息。它定义了 DLL 的名称和说明等参数，而且还从 DLL 导出函数。
+    This file contains information about the DLL that must be
+    provided to run with Microsoft Windows.  It defines parameters
+    such as the name and description of the DLL.  It also exports
+	functions from the DLL.
 
 /////////////////////////////////////////////////////////////////////////////
-其他标准文件:
+Other standard files:
 
 StdAfx.h, StdAfx.cpp
-    这些文件用于生成名为 DuhMEx.pch 的预编译头 (PCH) 文件和名为 StdAfx.obj 的预编译类型文件。
+    These files are used to build a precompiled header (PCH) file
+    named DuhMEx.pch and a precompiled types file named StdAfx.obj.
 
 Resource.h
-    这是标准头文件，可用于定义新的资源 ID。Microsoft Visual C++ 将读取并更新此文件。
+    This is the standard header file, which defines new resource IDs.
+    Microsoft Visual C++ reads and updates this file.
 
 /////////////////////////////////////////////////////////////////////////////
-其他注释:
+Other notes:
 
-应用程序向导使用“TODO:”来指示应添加或自定义的源代码部分。
+AppWizard uses "TODO:" to indicate parts of the source code you
+should add to or customize.
 
 /////////////////////////////////////////////////////////////////////////////
