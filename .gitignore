@@ -320,3 +320,7 @@ ASALocalRun/
 
 # MSBuild Binary and Structured Log
 *.binlog
+/DuhMEx/DuhMEx.clw
+/DuhMEx/DuhMEx.dsw
+/DuhMEx/DuhMEx.positions
+/DuhMEx/DuhMEx.vcxproj.filters
