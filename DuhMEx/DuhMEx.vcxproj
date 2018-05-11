@@ -43,11 +43,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>$(ProjectName)_x86D</TargetName>
+    <TargetName>$(ProjectName)_vc120_x86D</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>$(ProjectName)_x86</TargetName>
+    <TargetName>$(ProjectName)_vc120_x86</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -73,13 +73,14 @@
     </ResourceCompile>
     <PostBuildEvent>
       <Command>@echo 拷贝二进制文件
-xcopy $(OutDir)$(ProjectName)_x86D.dll ..\bin\ /y 
-xcopy $(OutDir)$(ProjectName)_x86D.lib ..\bin\ /y 
+xcopy $(OutDir)$(ProjectName)_vc120_x86D.dll ..\bin\debug\ /y 
+xcopy $(OutDir)$(ProjectName)_vc120_x86D.lib ..\bin\debug\ /y 
 @echo 拷贝头文件
-xcopy $(ProjectDir)DetailWnd.h ..\include\ /y 
-xcopy $(ProjectDir)DuhMenu.h ..\include\ /y 
-xcopy $(ProjectDir)DuhStatic.h ..\include\ /y 
-xcopy $(ProjectDir)SearchEdit.h ..\include\ /y </Command>
+xcopy $(ProjectDir)DetailWnd.h ..\header\ /y 
+xcopy $(ProjectDir)DuhMenu.h ..\header\ /y 
+xcopy $(ProjectDir)DuhStatic.h ..\header\ /y 
+xcopy $(ProjectDir)SearchEdit.h ..\header\ /y 
+xcopy $(ProjectDir)AES.h ..\header\ /y </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -110,24 +111,27 @@ xcopy $(ProjectDir)SearchEdit.h ..\include\ /y </Command>
     </ResourceCompile>
     <PostBuildEvent>
       <Command>@echo 拷贝二进制文件
-xcopy $(OutDir)$(ProjectName)_x86.dll ..\bin\ /y 
-xcopy $(OutDir)$(ProjectName)_x86.lib ..\bin\ /y 
+xcopy $(OutDir)$(ProjectName)_vc120_x86.dll ..\bin\release\ /y 
+xcopy $(OutDir)$(ProjectName)_vc120_x86.lib ..\bin\release\ /y 
 @echo 拷贝头文件
-xcopy $(ProjectDir)DetailWnd.h ..\include\ /y 
-xcopy $(ProjectDir)DuhMenu.h ..\include\ /y 
-xcopy $(ProjectDir)DuhStatic.h ..\include\ /y 
-xcopy $(ProjectDir)SearchEdit.h ..\include\ /y </Command>
+xcopy $(ProjectDir)DetailWnd.h ..\header\ /y 
+xcopy $(ProjectDir)DuhMenu.h ..\header\ /y 
+xcopy $(ProjectDir)DuhStatic.h ..\header\ /y 
+xcopy $(ProjectDir)SearchEdit.h ..\header\ /y </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AES.cpp" />
+    <ClCompile Include="Base64.cpp" />
     <ClCompile Include="DetailWnd.cpp" />
     <ClCompile Include="DuhMenu.cpp" />
     <ClCompile Include="DuhMEx.cpp" />
     <ClCompile Include="DuhStatic.cpp" />
     <ClCompile Include="PictureEx.cpp" />
+    <ClCompile Include="Rijndael.cpp" />
     <ClCompile Include="SearchEdit.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -139,11 +143,14 @@ xcopy $(ProjectDir)SearchEdit.h ..\include\ /y </Command>
     <None Include="res\DuhMEx.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AES.h" />
+    <ClInclude Include="Base64.h" />
     <ClInclude Include="DetailWnd.h" />
     <ClInclude Include="DuhMenu.h" />
     <ClInclude Include="DuhStatic.h" />
     <ClInclude Include="PictureEx.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Rijndael.h" />
     <ClInclude Include="SearchEdit.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
