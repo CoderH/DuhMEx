@@ -45,6 +45,24 @@
     <ClCompile Include="Rijndael.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GdipEx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HookMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinMenuMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinMenuWnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Subclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WinClasses.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DuhMEx.rc">
@@ -85,11 +103,36 @@
     <ClInclude Include="Rijndael.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GdipEx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HookMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinMenuMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinMenuWnd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Subclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wclassdefines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WinClasses.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\loading_small.gif">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\arrow-right-sm.png" />
+    <Image Include="res\check.png" />
+    <Image Include="res\check_Hilite.png" />
+    <Image Include="res\arrow-right-sm-hilite.png" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

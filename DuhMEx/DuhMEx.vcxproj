@@ -73,14 +73,16 @@
     </ResourceCompile>
     <PostBuildEvent>
       <Command>@echo 拷贝二进制文件
-xcopy $(OutDir)$(ProjectName)_vc120_x86D.dll ..\bin\debug\ /y 
-xcopy $(OutDir)$(ProjectName)_vc120_x86D.lib ..\bin\debug\ /y 
+xcopy $(OutDir)$(ProjectName)_vc120_x86D.dll ..\lib\debug\ /y 
+xcopy $(OutDir)$(ProjectName)_vc120_x86D.lib ..\lib\debug\ /y 
 @echo 拷贝头文件
-xcopy $(ProjectDir)DetailWnd.h ..\header\ /y 
-xcopy $(ProjectDir)DuhMenu.h ..\header\ /y 
-xcopy $(ProjectDir)DuhStatic.h ..\header\ /y 
-xcopy $(ProjectDir)SearchEdit.h ..\header\ /y 
-xcopy $(ProjectDir)AES.h ..\header\ /y </Command>
+xcopy $(ProjectDir)DetailWnd.h ..\include\ /y 
+xcopy $(ProjectDir)DuhMenu.h ..\include\ /y 
+xcopy $(ProjectDir)DuhStatic.h ..\include\ /y 
+xcopy $(ProjectDir)SearchEdit.h ..\include\ /y 
+xcopy $(ProjectDir)AES.h ..\include\ /y 
+xcopy $(ProjectDir)SkinMenuMgr.h ..\include\ /y 
+xcopy $(ProjectDir)HookMgr.h ..\include\ /y </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -111,13 +113,16 @@ xcopy $(ProjectDir)AES.h ..\header\ /y </Command>
     </ResourceCompile>
     <PostBuildEvent>
       <Command>@echo 拷贝二进制文件
-xcopy $(OutDir)$(ProjectName)_vc120_x86.dll ..\bin\release\ /y 
-xcopy $(OutDir)$(ProjectName)_vc120_x86.lib ..\bin\release\ /y 
+xcopy $(OutDir)$(ProjectName)_vc120_x86.dll ..\lib\release\ /y 
+xcopy $(OutDir)$(ProjectName)_vc120_x86.lib ..\lib\release\ /y 
 @echo 拷贝头文件
-xcopy $(ProjectDir)DetailWnd.h ..\header\ /y 
-xcopy $(ProjectDir)DuhMenu.h ..\header\ /y 
-xcopy $(ProjectDir)DuhStatic.h ..\header\ /y 
-xcopy $(ProjectDir)SearchEdit.h ..\header\ /y </Command>
+xcopy $(ProjectDir)DetailWnd.h ..\include\ /y 
+xcopy $(ProjectDir)DuhMenu.h ..\include\ /y 
+xcopy $(ProjectDir)DuhStatic.h ..\include\ /y 
+xcopy $(ProjectDir)SearchEdit.h ..\include\ /y 
+xcopy $(ProjectDir)AES.h ..\include\ /y 
+xcopy $(ProjectDir)SkinMenuMgr.h ..\include\ /y 
+xcopy $(ProjectDir)HookMgr.h ..\include\ /y </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -130,13 +135,19 @@ xcopy $(ProjectDir)SearchEdit.h ..\header\ /y </Command>
     <ClCompile Include="DuhMenu.cpp" />
     <ClCompile Include="DuhMEx.cpp" />
     <ClCompile Include="DuhStatic.cpp" />
+    <ClCompile Include="GdipEx.cpp" />
+    <ClCompile Include="HookMgr.cpp" />
     <ClCompile Include="PictureEx.cpp" />
     <ClCompile Include="Rijndael.cpp" />
     <ClCompile Include="SearchEdit.cpp" />
+    <ClCompile Include="SkinMenuMgr.cpp" />
+    <ClCompile Include="SkinMenuWnd.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Subclass.cpp" />
+    <ClCompile Include="WinClasses.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DuhMEx.def" />
@@ -148,17 +159,28 @@ xcopy $(ProjectDir)SearchEdit.h ..\header\ /y </Command>
     <ClInclude Include="DetailWnd.h" />
     <ClInclude Include="DuhMenu.h" />
     <ClInclude Include="DuhStatic.h" />
+    <ClInclude Include="GdipEx.h" />
+    <ClInclude Include="HookMgr.h" />
     <ClInclude Include="PictureEx.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Rijndael.h" />
     <ClInclude Include="SearchEdit.h" />
+    <ClInclude Include="SkinMenuMgr.h" />
+    <ClInclude Include="SkinMenuWnd.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Subclass.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="wclassdefines.h" />
+    <ClInclude Include="WinClasses.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DuhMEx.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\arrow-right-sm-hilite.png" />
+    <Image Include="res\arrow-right-sm.png" />
+    <Image Include="res\check.png" />
+    <Image Include="res\check_Hilite.png" />
     <Image Include="res\loading_small.gif" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
