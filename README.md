@@ -9,4 +9,5 @@ AES加密、解密。
 ## DetailWnd.h
 提示窗
 ## SkinMenuMgr.h
-利用钩子子类化程序菜单，重新绘制。
+利用钩子子类化程序弹出式菜单，重新绘制样式。  
+只支持有发送WM_INITMENUPOPUP消息的窗口弹出的菜单（不支持cedit控件菜单）
