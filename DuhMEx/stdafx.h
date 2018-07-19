@@ -35,6 +35,11 @@
 #include <afxcmn.h>			// MFC support for Windows Common Controls
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
+
+#ifndef ENVIONMENTS_VS2013
+#pragma warning(disable:4786)
+#endif
+
 namespace Duh{}
 using namespace Duh;
 

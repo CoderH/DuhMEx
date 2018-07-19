@@ -53,17 +53,17 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 /nologo /subsystem:windows /dll /machine:I386
+# ADD LINK32 /nologo /subsystem:windows /dll /machine:I386 /out:"Release/DuhMEx_vc60.dll"
 # Begin Custom Build
 OutDir=.\Release
-TargetName=DuhMEx
-InputPath=.\Release\DuhMEx.dll
+TargetName=DuhMEx_vc60
+InputPath=.\Release\DuhMEx_vc60.dll
 SOURCE="$(InputPath)"
 
 "$(TargetName)" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	echo 拷贝二进制文件 
-	xcopy $(OutDir)\$(TargetName).dll ..\bin\release\ /y 
-	xcopy $(OutDir)\$(TargetName).lib ..\bin\release\ /y 
+	xcopy $(OutDir)\$(TargetName).dll ..\lib\release\ /y 
+	xcopy $(OutDir)\$(TargetName).lib ..\lib\release\ /y 
 	
 # End Custom Build
 
@@ -91,18 +91,18 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 /nologo /subsystem:windows /dll /debug /machine:I386 /out:"Debug/DuhMEx_vc60D.dll" /pdbtype:sept
 # Begin Custom Build
 OutDir=.\Debug
 ProjDir=.
-TargetName=DuhMEx
-InputPath=.\Debug\DuhMEx.dll
+TargetName=DuhMEx_vc60D
+InputPath=.\Debug\DuhMEx_vc60D.dll
 SOURCE="$(InputPath)"
 
 "$(TargetName)" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	echo 拷贝二进制文件 
-	xcopy $(OutDir)\$(TargetName).dll ..\bin\debug\ /y 
-	xcopy $(OutDir)\$(TargetName).lib ..\bin\debug\ /y 
+	xcopy $(OutDir)\$(TargetName).dll ..\lib\debug\ /y 
+	xcopy $(OutDir)\$(TargetName).lib ..\lib\debug\ /y 
 	echo 拷贝头文件 
 	xcopy $(ProjDir)\DetailWnd.h ..\include\ /y 
 	xcopy $(ProjDir)\DuhMenu.h ..\include\ /y 
@@ -155,6 +155,14 @@ SOURCE=.\DuhStatic.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\GdipEx.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HookMgr.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\PictureEx.cpp
 # End Source File
 # Begin Source File
@@ -167,8 +175,24 @@ SOURCE=.\SearchEdit.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\SkinMenuMgr.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\SkinMenuWnd.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Subclass.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\WinClasses.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -196,6 +220,14 @@ SOURCE=.\DuhStatic.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\GdipEx.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\HookMgr.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\PictureEx.h
 # End Source File
 # Begin Source File
@@ -212,7 +244,23 @@ SOURCE=.\SearchEdit.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\SkinMenuMgr.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\SkinMenuWnd.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\wclassdefines.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\WinClasses.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

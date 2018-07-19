@@ -2,7 +2,6 @@
 #include "GdipEx.h"
 
 using namespace Gdiplus;
-using namespace std;
 
 void Duh::GdiplusEx::MakeRoundRectPath(GraphicsPath &path, const Rect &rect, int roundWidth, int roundHeight)
 {

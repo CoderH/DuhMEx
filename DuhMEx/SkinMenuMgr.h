@@ -46,6 +46,7 @@ namespace Duh
    {
       friend class CHookMgr<CSkinMenuMgr>;
    public:
+      virtual ~CSkinMenuMgr();
       static CSkinMenuMgr *Instance();
       void            Hook            ();
       void            UnHook          ();
@@ -76,7 +77,6 @@ namespace Duh
       FILITERMENUMAP      *m_pMapFilter;
    protected:
       CSkinMenuMgr();
-      virtual ~CSkinMenuMgr();
 
       virtual void OnCallWndProc     (const MSG& msg);
       static BOOL CallBackOnAttchMenu(CSkinMenuWnd *pWnd, LPARAM lParam);
