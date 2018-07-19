@@ -135,11 +135,7 @@
     <Image Include="res\arrow-right-sm-hilite.png" />
     <Image Include="res\radio button.png" />
     <Image Include="res\radio.png" />
-    <Image Include="res\radio (1).png" />
-    <Image Include="res\radio (2).png" />
     <Image Include="res\radio-hilite.png" />
-    <Image Include="res\radio (4).png" />
-    <Image Include="res\radio (5).png" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
